@@ -8,7 +8,10 @@
     - Ricardo
 
 ## Descripción
-    Estre proyecto tiene como objetivo desarrollar un sistema de escritorio básico para la gestión de ventas de un kiosco, usando como lenguaje de programación Python e integrando una interfaz gráfica con la libreria Tkinter. Este proyecto fue creado como trabajo práctico de la Etapa 2 del Informatorio
+    Estre proyecto tiene como objetivo desarrollar un sistema de escritorio básico para la
+    gestión de ventas de un kiosco, usando como lenguaje de programación Python e integrando una
+    interfaz gráfica con la libreria Tkinter. Este proyecto fue creado como trabajo práctico de
+    la Etapa 2 del Informatorio
 
 ### Características Principales
     Una lista de lo que hace el software. //Tdv incompleto

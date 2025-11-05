@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 # Este archivo fue creado tomando como referencia la documentacion oficial de Tkinter
-#https://docs.python.org/3/library/tkinter.html
+#https://docs.python.org/3/library/tkinter.htmls
 root = Tk()
 frm = ttk.Frame(root, padding=10)
 frm.grid()
