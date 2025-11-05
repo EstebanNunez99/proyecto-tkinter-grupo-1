@@ -1,0 +1,17 @@
+#Entorno virtual para instalar mysql-connector
+venv
+.vscode
+
+#Variables de entorno
+.env
+
+
+
+#Archivos que despues tengo que subir al repo
+test_conection.py
+main.py
+
+.env.example
+
+# Caché de Python
+__pycache__/

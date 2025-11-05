@@ -67,9 +67,27 @@ Actúa como tabla pivote, conectando `Ventas` y `Productos`. Almacena cada líne
     ```bash
     git clone (https://github.com/EstebanNunez99/proyecto-tkinter-grupo-1.git)
     cd (proyecto-tkinter-grupo-1)
-    ``
-Instalar las librerías necesarias (pip install mysql-connector-python).
+    ```
+2.  **Crear y Activar un Entorno Virtual**
+    ```bash
+    python3 -m venv venv
+    
+    Comando para entrar al entorno virtual
+    source venv/bin/activate
 
-Configurar la base de datos (correr el script SQL que vamos a crear).
+    Comando para salir del entorno virtual
+    deactivate
+    ```
 
-Ejecutar el programa (python main.py).
+3.  **Instalar Librerías**
+(Dentro del entorno virtual)
+    ```bash
+    pip install mysql-connector-python python-dotenv
+    ```
+
+4.  **Configurar Variables de Entorno**
+    Crea un archivo llamado `.env` en la raíz del proyecto. Copiar formato del archivo `.env.example` 
+    *Cambiar los valores por tus datos originales*
+
+5.  **Ejecutar la aplicación**
+    python3 main.py
