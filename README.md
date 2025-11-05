@@ -63,10 +63,13 @@ Actúa como tabla pivote, conectando `Ventas` y `Productos`. Almacena cada líne
 
 ### Requisitos e Instalación
     Pasos básicos: //falta completar
-    Clonar el repositorio (o descargar los archivos).
+1.  **Clonar el Repositorio**
+    ```bash
+    git clone (https://github.com/EstebanNunez99/proyecto-tkinter-grupo-1.git)
+    cd (proyecto-tkinter-grupo-1)
+    ``
+Instalar las librerías necesarias (pip install mysql-connector-python).
 
-    Instalar las librerías necesarias (pip install mysql-connector-python).
+Configurar la base de datos (correr el script SQL que vamos a crear).
 
-    Configurar la base de datos (correr el script SQL que vamos a crear).
-
-    Ejecutar el programa (python main.py).
+Ejecutar el programa (python main.py).
