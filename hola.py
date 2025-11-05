@@ -10,3 +10,4 @@ ttk.Label(frm, text='Bienvenidos, somos el grupo 1').grid(column=0, row=0)
 ttk.Label(frm, text='-----------------------------').grid(column=0, row=1)#Todavia no se como agregar una linea separadora
 ttk.Button(frm, text="Salir", command=root.destroy).grid(column=0, row=2)
 root.mainloop()
+
