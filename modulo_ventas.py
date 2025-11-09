@@ -25,46 +25,80 @@ def abrir_ventana_nueva_venta():
     tk.Label(frame_entradas, text="Nombre:").grid(row=0, column=0, padx=5)
     entry_nombre = tk.Entry(frame_entradas)
     entry_nombre.grid(row=0, column=1, padx=5)
-
     tk.Label(frame_entradas, text="Cantidad:").grid(row=0, column=2, padx=5)
     entry_cantidad = tk.Entry(frame_entradas, width=10)
     entry_cantidad.grid(row=0, column=3, padx=5)
-
-    tk.Label(frame_entradas, text="Precio Unitario (PU):").grid(row=0, column=4, padx=5)
+    tk.Label(frame_entradas, text="Precwio Unitario (PU):").grid(row=0, column=4, padx=5)
     entry_pu = tk.Entry(frame_entradas, width=10)
     entry_pu.grid(row=0, column=5, padx=5)
 
+
     # --- Lógica de la tabla (Funciones anidadas) ---
+
+    # =================================
+    # == FUNCIÓN "Agregar producto" ===
+    #==================================
     def agregar_producto():
         nonlocal total_venta
-        try:
-            nombre = entry_nombre.get()
-            cantidad = int(entry_cantidad.get())
-            pu = float(entry_pu.get())
 
-            if not nombre or cantidad <= 0 or pu <= 0:
-                messagebox.showwarning("Datos incompletos", "Por favor, ingrese todos los datos.", parent=ventana_venta)
-                return
-            
-            subtotal = cantidad * pu
+        nombre = entry_nombre.get()
+        cantidad_str = entry_cantidad.get()
+        pu_str = entry_pu.get()
 
-            # Actualizar total
-            total_venta+= subtotal
-            label_total.config(text=f"TOTAL: ${total_venta:.2F}")
-
-            # Insertar en la tabla
-            tabla_venta.insert('', tk.END, values=(nombre, cantidad, f"${pu:.2f}", f"${subtotal:.2f}"))
-
-            # Limpiar campos
-            entry_nombre.delete(0, tk.END)
-            entry_cantidad.delete(0, tk.END)
-            entry_pu.delete(0, tk.END)
-            entry_pu.focus()
+        if not nombre:
+            messagebox.showwarning("Error de Entrada","El campo 'Nombre' no puede estar vacío", parent=ventana_venta)
             entry_nombre.focus()
+            return  
+        if not cantidad_str:
+            messagebox.showwarning("Error de entrada", "El campo 'Cantidad' no puede estar vacío", parent=ventana_venta)
+            entry_cantidad.focus()
+            return
+        if not pu_str:
+            messagebox.showwarning("Error de entrada", "El campo 'PU' no puede estar vacío", parent=ventana_venta)
+            entry_pu.focus
+            return
         
+        try:
+            cantidad = float(cantidad_str)
         except ValueError:
-            messagebox.showerror("Error de tipo", "Ingrese números válidos en Cantidad y PU.", parent=ventana_venta)
-    
+            messagebox.showerror("Error de tipo", "La 'Cantidad' debe ser un número (ej: 1 o 1.5).", parent=ventana_venta)
+            entry_cantidad.focus()
+            return
+        
+        try:
+            pu = float(pu_str)
+        except ValueError:
+            messagebox.showerror("Error de tipo", "El 'PU' debe ser un número (ej: 150.50).", parent=ventana_venta)
+            entry_cantidad.focus()
+            return
+
+
+        if cantidad <= 0:
+            messagebox.showwarning("Error lógico", "La 'Cantidad' debe ser mayor a 0", parent=ventana_venta)
+            entry_cantidad.focus()
+            return
+        if pu <= 0:
+            messagebox.showwarning("Error lógico", "El 'PU' debe ser mayor a 0", parent=ventana_venta)
+            entry_pu.focus()
+            return
+        
+        subtotal = cantidad * pu
+
+        total_venta += subtotal
+        label_total.config(text=f"TOTAL: ${total_venta:.2f}")
+
+        tabla_venta.insert('', tk.END, values=(nombre, cantidad, f"${pu:.2f}", f"${subtotal:.2f}"))
+
+        entry_nombre.delete(0, tk.END)
+        entry_cantidad.delete(0, tk.END)
+        entry_pu.delete(0, tk.END)
+        entry_nombre.focus()
+
+
+
+    # =================================
+    # == FUNCIÓN "Eliminar producto" ==
+    #==================================
     def eliminar_producto():
         nonlocal total_venta
         try:
@@ -136,8 +170,6 @@ if __name__ == "__main__":
 
     ventana_principal_prueba = tk.Tk()
     ventana_principal_prueba.title("Ventana de Prueba(Proyecto Grande)")
-
-    tk.Label(ventana_principal_prueba, text="Esta es la ventana principal de tu proyecto.")
 
     boton_prueba = tk.Button(ventana_principal_prueba, text="Abrir Módulo de 'Nueva Venta'", command=abrir_ventana_nueva_venta)
 
