@@ -1,9 +1,70 @@
 import tkinter as tk
-
+from tkinter import ttk
+import db_connector
 #Ya no necesitamos ahora solo será un modulo
 # ventana = tk.Tk()
 #Agrego todo a una sola funcion 
 
+#Agrego una funcion para mostrar el historial de ventas
+def mostrar_historial_ventas(ventana_padre):
+
+    ventana_historial = tk.Toplevel(ventana_padre)
+    ventana_historial.title("Historial de Ventas")
+    ventana_historial.geometry("500x400")
+
+    frame_tabla = tk.Frame(ventana_historial)
+    frame_tabla.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+    columnas = ("id_venta", "fecha", "total")
+    tabla_historial = ttk.Treeview(frame_tabla, columns=columnas, show="headings")
+    
+    # Columnas
+    tabla_historial.heading("id_venta", text="ID Venta")
+    tabla_historial.column("id_venta", width=80, anchor=tk.CENTER)
+    tabla_historial.heading("fecha", text="Fecha y Hora")
+    tabla_historial.column("fecha", width=200)
+    tabla_historial.heading("total", text="Total Vendido")
+    tabla_historial.column("total", width=100, anchor=tk.E)
+
+    #barra de desplz
+    scrollbar = ttk.Scrollbar(frame_tabla, orient=tk.VERTICAL, command=tabla_historial.yview)
+    tabla_historial.configure(yscrollcommand=scrollbar.set)
+    
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    tabla_historial.pack(fill=tk.BOTH, expand=True)
+
+
+    id_temporal = tabla_historial.insert('', tk.END, values=("Cargando...", "", ""))
+    tabla_historial.configure(selectmode="none") 
+
+    def _on_historial_cargado(historial):
+        """Callback que se ejecuta cuando el hilo de BD termina."""
+        
+        # Corremos la actualización en el hilo principal con 'after'
+        def actualizar_tabla():
+            tabla_historial.delete(id_temporal)
+            tabla_historial.configure(selectmode="browse") 
+            
+            if not historial:
+                tabla_historial.insert('', tk.END, values=("No hay ventas", "", ""))
+                return
+
+            # Poblamos la tabla con los datos reales
+            for venta in historial:
+                id_venta = venta[0]
+                fecha = venta[1].strftime('%Y-%m-%d %H:%M:%S') 
+                total = f"${venta[2]:.2f}" 
+                tabla_historial.insert('', tk.END, values=(id_venta, fecha, total))
+
+        ventana_historial.after(0, actualizar_tabla)
+
+
+    db_connector.obtener_historial_en_hilo(callback=_on_historial_cargado)
+
+    ventana_historial.transient()
+    ventana_historial.grab_set()
+    ventana_historial.wait_window()
+    
 def abrir_panel():
     
     ventana = tk.Toplevel()
@@ -16,7 +77,7 @@ def abrir_panel():
     etiqueta = tk.Label(ventana, text="Panel de Ventas", font=("Elephant", 25))
     etiqueta.pack()
 
-    boton1 = tk.Button(ventana, text="Fecha", font=("Arial Black", 12), command= Trabajo)
+    boton1 = tk.Button(ventana, text="Historial de Ventas", font=("Arial Black", 12), command=lambda: mostrar_historial_ventas(ventana))
     boton1.pack()
     boton2 = tk.Button(ventana, text= "Número de Cliente", font=("Arial Black", 12), command= Trabajo)
     boton2.pack()

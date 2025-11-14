@@ -6,7 +6,7 @@ import db_connector  # para que se conecte a la base de datos
 def abrir_ventana_nueva_venta():
     ventana_venta = tk.Toplevel()
     ventana_venta.title("Nueva Venta")
-    ventana_venta.geometry("600x500")
+    ventana_venta.geometry("800x400")
 
     total_venta = 0.0
     
