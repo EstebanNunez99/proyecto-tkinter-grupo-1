@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 import db_connector
+from tkinter import messagebox
 #Ya no necesitamos ahora solo será un modulo
 # ventana = tk.Tk()
 #Agrego todo a una sola funcion 
@@ -74,6 +75,35 @@ def abrir_panel():
     def Trabajo():
         print("Este botón todavia no hace nada :)")
         
+        
+    def mostrar_info_proyecto():
+        titulo = "Acerca del Proyecto"
+        info = (
+            "Proyecto Grupal - Punto de Venta Básico\n\n"
+            "Objetivo:\n"
+            "Unificar 4 mini-proyectos "
+            "en un solo proyecto. Como extra lo conectamos a una "
+            "base de datos PostgreSQL en la nube (Render) para "
+            "la persistencia de datos"
+        )
+        # El 'parent=ventana' asegura que la alerta 
+        # aparezca sobre esta ventana
+        messagebox.showinfo(titulo, info, parent=ventana)
+
+    def mostrar_info_app():
+        titulo = "Acerca de esta APP"
+        info = (
+            "Gestión de Kiosco v1.0\n\n"
+            "Tecnologías usadas:\n"
+            " - Python 3\n"
+            " - Tkinter (para la GUI)\n"
+            " - Psycopg2 (Conector de BD)\n"
+            " - PostgreSQL (Hosteado en Render)\n"
+            " - Threading (para evitar congelamiento)\n"
+            " - Python-dotenv (para variables de entorno)"
+        )
+        messagebox.showinfo(titulo, info, parent=ventana)
+        
     etiqueta = tk.Label(ventana, text="Panel de Ventas", font=("Elephant", 25))
     etiqueta.pack()
 
@@ -121,13 +151,10 @@ def abrir_panel():
     submenu.add_command(label = 'Disponibilidad Total del Producto')
     submenu.add_command(label = 'Falta de Stock')
 
-    menu_principal = tk.Menu(barra_menu)
-    barra_menu.add_cascade(label ="Tasa de Conversion", menu=menu_principal)
-    submenu = tk.Menu(menu_principal)
-    menu_principal.add_cascade(label ="Tasa Fija en Pesos o en Dólares", menu=submenu)
-
-    submenu.add_command(label = 'Pesos')
-    submenu.add_command(label = 'Dolares (Cotizacion actual en Linea)')
+    menu_acerca_de = tk.Menu(barra_menu, tearoff=0)
+    barra_menu.add_cascade(label="Acerca de", menu=menu_acerca_de)
+    menu_acerca_de.add_command(label="Del proyecto", command=mostrar_info_proyecto)
+    menu_acerca_de.add_command(label="De esta APP", command=mostrar_info_app)
 
     menu_principal = tk.Menu(barra_menu)
     barra_menu.add_cascade(label ="Ayuda", menu=menu_principal)

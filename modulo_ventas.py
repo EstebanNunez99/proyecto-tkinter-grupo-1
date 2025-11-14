@@ -194,12 +194,13 @@ def abrir_ventana_nueva_venta():
     tabla_venta.heading("subtotal", text="Subtotal")
     tabla_venta.column("subtotal", width=100, anchor=tk.E)
 
-    tabla_venta.pack(fill=tk.BOTH, expand=True)
 
     # --- Scrollbar ---
     scrollbar = ttk.Scrollbar(frame_tabla, orient=tk.VERTICAL, command=tabla_venta.yview)
     tabla_venta.configure(yscrollcommand=scrollbar.set)
+    
     scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    tabla_venta.pack(fill=tk.BOTH, expand=True)
 
     # Botones de Acción y Total
     boton_agregar = tk.Button(frame_botones, text="Agregar producto", command=agregar_producto)
