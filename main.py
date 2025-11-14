@@ -1,8 +1,9 @@
 import tkinter as tk
 from tkinter import ttk 
-import RELOJ # este es el modulo RELOJ hecho por Lorena
 
+import RELOJ # este es el modulo RELOJ hecho por Lorena
 import modulo_ventas # este es el modulo_ventas que hizo 
+import Proyecto_grupal_Tkinter as panel_ventas # este es el panel de ventas que hizo 
 
 ventana_principal = tk.Tk()
 ventana_principal.title("Gestión de Kiosco - Proyecto Grupal")
@@ -37,7 +38,9 @@ boton_nueva_venta.pack(fill=tk.X, pady=10)
 boton_panel_ventas = ttk.Button(
     frame_central, 
     text="Abrir Panel de Ventas",
-    style="TButton"
+    style="TButton",
+    #conecto el boton
+    command=panel_ventas.abrir_panel
 )
 boton_panel_ventas.pack(fill=tk.X, pady=10)
 
