@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk 
 import RELOJ # este es el modulo RELOJ hecho por Lorena
 
-
+import modulo_ventas # este es el modulo_ventas que hizo 
 
 ventana_principal = tk.Tk()
 ventana_principal.title("Gestión de Kiosco - Proyecto Grupal")
@@ -28,7 +28,9 @@ estilo_botones.configure("TButton", font=("Arial", 12, "bold"), padding=15)
 boton_nueva_venta = ttk.Button(
     frame_central, 
     text="Registrar Nueva Venta",
-    style="TButton"
+    style="TButton",
+    #conecto el botón
+    command=modulo_ventas.abrir_ventana_nueva_venta
 )
 boton_nueva_venta.pack(fill=tk.X, pady=10)
 

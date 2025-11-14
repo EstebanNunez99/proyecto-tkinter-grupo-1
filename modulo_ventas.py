@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
+import db_connector  # para que se conecte a la base de datos
 
 def abrir_ventana_nueva_venta():
     ventana_venta = tk.Toplevel()
@@ -124,6 +125,61 @@ def abrir_ventana_nueva_venta():
         except:
             messagebox.showerror("Error", "No se pudo eliminar el producto.", parent=ventana_venta)
 
+    
+    def finalizar_y_guardar():
+        nonlocal total_venta
+        
+        items_en_tabla = tabla_venta.get_children()
+        
+        if not items_en_tabla:
+            messagebox.showwarning("Venta Vacía", "Agregá productos para crear una venta", parent=ventana_venta)
+            return
+
+        lista_productos_para_bd = []
+        for item_id in items_en_tabla:
+            valores_fila = tabla_venta.item(item_id, "values")
+            nombre = valores_fila[0]
+            cantidad = float(valores_fila[1])
+            # Limpiamos el PU (quitamos "$")
+            pu = float(valores_fila[2].replace("$", ""))
+            
+            lista_productos_para_bd.append((nombre, cantidad, pu))
+
+        # --- Lógica de Hilos para no congelar la App ---
+        
+        # Deshabilitamos botones para evitar doble click
+        boton_agregar.config(state=tk.DISABLED)
+        boton_eliminar.config(state=tk.DISABLED)
+        boton_guardar.config(state=tk.DISABLED, text="Guardando...")
+
+        # 2. Funciones de Callback (para el hilo)
+        def _on_guardado_exitoso():
+            # Esta función será llamada por el hilo cuando termine BIEN
+            # Usamos 'after' para asegurar que el messagebox corra en el hilo principal
+            ventana_venta.after(0, lambda: [
+                messagebox.showinfo("Éxito", "Venta guardada correctamente.", parent=ventana_venta),
+                ventana_venta.destroy() # Cierra la ventana de venta
+            ])
+
+        def _on_guardado_error(error_msg):
+            # Esta función será llamada por el hilo si ALGO FALLA
+            ventana_venta.after(0, lambda: [
+                messagebox.showerror("Error de Base de Datos", f"No se pudo guardar la venta:\n{error_msg}", parent=ventana_venta),
+                # Rehabilitamos botones para que pueda reintentar
+                boton_agregar.config(state=tk.NORMAL),
+                boton_eliminar.config(state=tk.NORMAL),
+                boton_guardar.config(state=tk.NORMAL, text="Finalizar y Guardar")
+            ])
+        
+        # 3. Llamamos a la función del conector EN HILO
+        db_connector.guardar_venta_en_hilo(
+            lista_productos=lista_productos_para_bd,
+            total_venta=total_venta,
+            callback_exito=_on_guardado_exitoso,
+            callback_error=_on_guardado_error
+        )
+    
+    
     # --- Configuración de la Tabla (Treeview) ---
     columnas = ("nombre", "cantidad", "pu", "subtotal")
     tabla_venta = ttk.Treeview(frame_tabla, columns=columnas, show="headings")
@@ -151,6 +207,16 @@ def abrir_ventana_nueva_venta():
 
     boton_eliminar = tk.Button(frame_botones, text="Eliminar producto", command=eliminar_producto)
     boton_eliminar.pack(side=tk.LEFT, padx=10)
+    
+    boton_guardar = tk.Button(
+        frame_botones, 
+        text="Finalizar y Guardar", 
+        command=finalizar_y_guardar,
+        font=("Arial", 10, "bold"),
+        bg="#4CAF50", # Un color verde
+        fg="white"
+    )
+    boton_guardar.pack(side=tk.LEFT, padx=5)
 
     # Etiqueta para el Total General
     label_total = tk.Label(frame_botones, text="TOTAL: $0.00", font =("Arial", 14, "bold"))
@@ -166,14 +232,16 @@ def abrir_ventana_nueva_venta():
 # BLOQUE DE PRUEBA (SOLO PARA PROBAR ESTE ARCHIVO)
 # =====================================================
 
-if __name__ == "__main__":
+#Ahora ya no necesitamos, porque creé el nuevo punto de entrada main.py
+#este archivo ahora solo es un modulo
+# if __name__ == "__main__":
 
-    ventana_principal_prueba = tk.Tk()
-    ventana_principal_prueba.title("Ventana de Prueba(Proyecto Grande)")
+#     ventana_principal_prueba = tk.Tk()
+#     ventana_principal_prueba.title("Ventana de Prueba(Proyecto Grande)")
 
-    boton_prueba = tk.Button(ventana_principal_prueba, text="Abrir Módulo de 'Nueva Venta'", command=abrir_ventana_nueva_venta)
+#     boton_prueba = tk.Button(ventana_principal_prueba, text="Abrir Módulo de 'Nueva Venta'", command=abrir_ventana_nueva_venta)
 
-    boton_prueba.pack(expand=True, padx=50, pady=30)
+#     boton_prueba.pack(expand=True, padx=50, pady=30)
 
-    ventana_principal_prueba.mainloop()
+#     ventana_principal_prueba.mainloop()
     
