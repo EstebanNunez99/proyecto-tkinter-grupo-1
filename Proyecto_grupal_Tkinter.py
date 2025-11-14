@@ -178,6 +178,5 @@ def abrir_panel():
     ventana.transient()
     ventana.grab_set()
     ventana.wait_window()
-    ventana.mainloop()
 #Ya no se usa mainloop()
 #ventana.mainloop()

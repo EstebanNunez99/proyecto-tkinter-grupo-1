@@ -21,6 +21,24 @@ frame_central.pack(fill=tk.BOTH, expand=True, padx=20, pady=20)
 
 RELOJ.crear_reloj(frame_superior)
 
+def abrir_modulo_ventas():
+    boton_nueva_venta.config(state=tk.DISABLED)
+    boton_panel_ventas.config(state=tk.DISABLED)
+
+    modulo_ventas.abrir_ventana_nueva_venta()
+
+    boton_nueva_venta.config(state=tk.NORMAL)
+    boton_panel_ventas.config(state=tk.NORMAL)
+
+def abrir_modulo_panel():
+    boton_nueva_venta.config(state=tk.DISABLED)
+    boton_panel_ventas.config(state=tk.DISABLED)
+
+    panel_ventas.abrir_panel()
+
+    boton_nueva_venta.config(state=tk.NORMAL)
+    boton_panel_ventas.config(state=tk.NORMAL)
+
 
 
 estilo_botones = ttk.Style()
@@ -31,7 +49,7 @@ boton_nueva_venta = ttk.Button(
     text="Registrar Nueva Venta",
     style="TButton",
     #conecto el botón
-    command=modulo_ventas.abrir_ventana_nueva_venta
+    command=abrir_modulo_ventas
 )
 boton_nueva_venta.pack(fill=tk.X, pady=10)
 
@@ -40,7 +58,7 @@ boton_panel_ventas = ttk.Button(
     text="Abrir Panel de Ventas",
     style="TButton",
     #conecto el boton
-    command=panel_ventas.abrir_panel
+    command=abrir_modulo_panel
 )
 boton_panel_ventas.pack(fill=tk.X, pady=10)
 

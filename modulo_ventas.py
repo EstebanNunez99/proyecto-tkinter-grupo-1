@@ -29,7 +29,7 @@ def abrir_ventana_nueva_venta():
     tk.Label(frame_entradas, text="Cantidad:").grid(row=0, column=2, padx=5)
     entry_cantidad = tk.Entry(frame_entradas, width=10)
     entry_cantidad.grid(row=0, column=3, padx=5)
-    tk.Label(frame_entradas, text="Precwio Unitario (PU):").grid(row=0, column=4, padx=5)
+    tk.Label(frame_entradas, text="Precio Unitario (PU):").grid(row=0, column=4, padx=5)
     entry_pu = tk.Entry(frame_entradas, width=10)
     entry_pu.grid(row=0, column=5, padx=5)
 
@@ -156,20 +156,34 @@ def abrir_ventana_nueva_venta():
         def _on_guardado_exitoso():
             # Esta función será llamada por el hilo cuando termine BIEN
             # Usamos 'after' para asegurar que el messagebox corra en el hilo principal
-            ventana_venta.after(0, lambda: [
-                messagebox.showinfo("Éxito", "Venta guardada correctamente.", parent=ventana_venta),
-                ventana_venta.destroy() # Cierra la ventana de venta
-            ])
+            def lambda_exito():
+                try:
+                    # Comprueba si la ventana 'ventana_venta' todavía existe
+                    if ventana_venta.winfo_exists():
+                        messagebox.showinfo("Éxito", "Venta guardada correctamente.", parent=ventana_venta)
+                        ventana_venta.destroy()
+                except tk.TclError:
+                    # La ventana fue destruida mientras esperábamos
+                    print("Ventana de venta cerrada antes de mostrar éxito.")
+
+            ventana_venta.after(0, lambda_exito)
 
         def _on_guardado_error(error_msg):
             # Esta función será llamada por el hilo si ALGO FALLA
-            ventana_venta.after(0, lambda: [
-                messagebox.showerror("Error de Base de Datos", f"No se pudo guardar la venta:\n{error_msg}", parent=ventana_venta),
-                # Rehabilitamos botones para que pueda reintentar
-                boton_agregar.config(state=tk.NORMAL),
-                boton_eliminar.config(state=tk.NORMAL),
-                boton_guardar.config(state=tk.NORMAL, text="Finalizar y Guardar")
-            ])
+            def lambda_error():
+                # Comprueba si la ventana 'ventana_venta' todavía existe
+                try:
+                    if ventana_venta.winfo_exists():
+                        messagebox.showerror("Error de Base de datos", f"No se pudo guardar la venta:\n{error_msg}", parent=ventana_venta)
+                        # Rehabilitamos botones para que pueda reintentar
+                        boton_agregar.config(state=tk.NORMAL),
+                        boton_eliminar.config(state=tk.NORMAL),
+                        boton_guardar.config(state=tk.NORMAL, text="Finalizar y Guardar")
+                except tk.TclError:
+                    print("Ventana de venta cerrada antes de mostrar error.")
+
+            ventana_venta.after(0, lambda_error),
+                
         
         # 3. Llamamos a la función del conector EN HILO
         db_connector.guardar_venta_en_hilo(
