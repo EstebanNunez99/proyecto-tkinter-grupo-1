@@ -35,73 +35,48 @@
     - **Interfaz Gráfica (GUI):** Tkinter
     - **Base de Datos:** PostgreSQL (Hosteada en Render)
     - **Conector Python-BD:** psycopg2-binary
-    - **Gestión de Entorno:** venv
+    - **Empaquetador:** PyInstaller
     - **Variables de Entorno:** python-dotenv
 
-### Estructura de la Base de Datos (Schema)
-El sistema utiliza una base de datos PostgreSQL con dos tablas para registrar las transacciones.
+### Cómo Usar la Aplicación
 
-#### Tabla: `Ventas`
-Almacena un registro por cada transacción completada.
-* `id_venta` (SERIAL, PK): Identificador único autoincremental de la venta.
-* `fecha` (TIMESTAMP): Marca de tiempo (automática) de cuándo se guardó la venta.
-* `total` (DECIMAL(10, 2)): Suma total de la transacción.
+#### Opción 1: Usar el Ejecutable (Recomendado para Usuarios)
 
-#### Tabla: `DetalleVenta`
-Almacena cada línea de ítem correspondiente a una venta.
-* `id_detalle` (SERIAL, PK): Identificador único del detalle.
-* `id_venta` (FK): Referencia a la tabla `Ventas` (con `ON DELETE CASCADE`).
-* `nombre_producto` (TEXT): El nombre del producto ingresado manualmente.
-* `cantidad` (DECIMAL(10, 2)): Cuántas unidades se vendieron.
-* `precio_unitario` (DECIMAL(10, 2)): El precio del producto al momento de la venta.
+Esta es la forma más fácil de usar la aplicación sin necesidad de instalar Python.
 
-### Estructura del Proyecto
-El proyecto se organiza en 5 archivos de Python principales:
+1.  **Descargar la Carpeta:** Obtén la carpeta compilada `App-Kiosco `
+2.  **Verificar Archivos:** Asegúrate de que la carpeta contenga **dos archivos** esenciales:
+    * `main.exe` o `main`
+    * `.env` (Este archivo es **OBLIGATORIO** y debe estar junto al ejecutable).
+3.  **Ejecutar:**
+    * Simplemente haz doble clic en `main.exe`.
 
-* `main.py`: **(Punto de Entrada)**. Crea la ventana principal, integra el Reloj y contiene los botones para lanzar los módulos de Ventas y Panel.
-* `db_connector.py`: Maneja toda la lógica de conexión a la base de datos (usando `psycopg2` y `python-dotenv`) y gestiona la ejecución de consultas en hilos separados.
-* `modulo_ventas.py`: Define la sub-ventana "Nueva Venta", donde el usuario agrega productos a un carrito y guarda la venta final en la base de datos.
-* `Proyecto_grupal_Tkinter.py`: Define la sub-ventana "Panel de Ventas", que contiene el botón para ver el "Historial de Ventas" y el menú "Acerca de".
-* `RELOJ.py`: Módulo que provee la lógica y el widget del reloj, que es llamado por `main.py`.
+#### Opción 2: Ejecutar desde el Código Fuente (para Desarrollo)
 
-### Requisitos e Instalación
-    
+Esta opción es para desarrolladores que quieran modificar el código.
+
 1.  **Clonar el Repositorio**
     ```bash
-    git clone [https://github.com/EstebanNunez99/proyecto-tkinter-grupo-1.git](https://github.com/EstebanNunez99/proyecto-tkinter-grupo-1.git)
+    git clone https://github.com/EstebanNunez99/proyecto-tkinter-grupo-1.git
     cd proyecto-tkinter-grupo-1
-    ```
-2.  **Crear y Activar un Entorno Virtual**
-    (Recomendado para no instalar paquetes globalmente)
-    ```bash
-    # Crear el entorno (solo una vez)
-    python3 -m venv venv
-    
-    # Activar el entorno (cada vez que trabajes en el proyecto)
-    source venv/bin/activate
-    
-    # Para salir del entorno virtual
-    deactivate
     ```
 
 3.  **Instalar Librerías**
-    (Dentro del entorno virtual activado)
     ```bash
     pip install psycopg2-binary python-dotenv
     ```
 
 4.  **Configurar Variables de Entorno**
-    Crea un archivo llamado `.env` en la raíz del proyecto. Debe contener la URL de conexión de Render:
-    ```
-    DATABASE_URL="postgresql://USUARIO:CONTRASEÑA@HOST:PUERTO/BASEDEDATOS"
-    ```
-    *Reemplaza la URL por tu "External Connection String" de Render.*
+    Crea un archivo `.env` en la raíz del proyecto.
 
 5.  **Crear las Tablas en la BD**
-    Conéctate a tu base de datos de Render (usando `psql 'TU_URL_EXTERNA'` en tu terminal) y ejecuta el script SQL para crear las tablas `Ventas` y `DetalleVenta`.
+    Conéctate a tu base de datos de Render (usando `psql 'TU_URL_EXTERNA'`) y ejecuta el script SQL para crear las tablas `Ventas` y `DetalleVenta`.
 
 6.  **Ejecutar la aplicación**
-    (Asegúrate de tener el `venv` activado)
     ```bash
     python3 main.py
     ```
+
+### Estructura de la Base de Datos (Schema)
+* **Tabla: `Ventas`** (`id_venta`, `fecha`, `total`)
+* **Tabla: `DetalleVenta`** (`id_detalle`, `id_venta`, `nombre_producto`, `cantidad`, `precio_unitario`)

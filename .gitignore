@@ -1,6 +1,14 @@
 #Variables de entorno
 .env
 
+# Archivos y carpetas de Python
 venv/
+*.pyc
+__pycache__/
 
-__pycache__
+# Carpetas de PyInstaller (¡Las importantes!)
+build/
+dist/
+
+
+main.spec
