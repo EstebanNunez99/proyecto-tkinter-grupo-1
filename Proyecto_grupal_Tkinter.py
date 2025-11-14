@@ -41,24 +41,33 @@ def mostrar_historial_ventas(ventana_padre):
     def _on_historial_cargado(historial):
         """Callback que se ejecuta cuando el hilo de BD termina."""
         
-        # Corremos la actualización en el hilo principal con 'after'
         def actualizar_tabla():
-            tabla_historial.delete(id_temporal)
-            tabla_historial.configure(selectmode="browse") 
+            try:
+                # 1. Comprueba si la ventana 'ventana_historial' todavía existe
+                if ventana_historial.winfo_exists():
+                    
+                    # 2. Borra el "Cargando..."
+                    tabla_historial.delete(id_temporal)
+                    tabla_historial.configure(selectmode="browse") 
+                    
+                    if not historial:
+                        tabla_historial.insert('', tk.END, values=("No hay ventas", "", ""))
+                        return
+
+                    # 3. Define las variables DENTRO del 'try'
+                    #    y luego las usa. Aquí es donde estaba el error.
+                    for venta in historial:
+                        id_venta = venta[0]
+                        fecha = venta[1].strftime('%Y-%m-%d %H:%M:%S') 
+                        total = f"${venta[2]:.2f}" 
+                        tabla_historial.insert('', tk.END, values=(id_venta, fecha, total))
             
-            if not historial:
-                tabla_historial.insert('', tk.END, values=("No hay ventas", "", ""))
-                return
+            except tk.TclError:
+                # 4. Si la ventana no existe, el 'except' lo atrapa
+                print("Ventana de historial cerrada antes de cargar.")
 
-            # Poblamos la tabla con los datos reales
-            for venta in historial:
-                id_venta = venta[0]
-                fecha = venta[1].strftime('%Y-%m-%d %H:%M:%S') 
-                total = f"${venta[2]:.2f}" 
-                tabla_historial.insert('', tk.END, values=(id_venta, fecha, total))
-
+        # 'after' ya lo pone en el hilo principal
         ventana_historial.after(0, actualizar_tabla)
-
 
     db_connector.obtener_historial_en_hilo(callback=_on_historial_cargado)
 

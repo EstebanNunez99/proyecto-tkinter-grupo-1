@@ -56,7 +56,7 @@ def abrir_ventana_nueva_venta():
             return
         if not pu_str:
             messagebox.showwarning("Error de entrada", "El campo 'PU' no puede estar vacío", parent=ventana_venta)
-            entry_pu.focus
+            entry_pu.focus()
             return
         
         try:
