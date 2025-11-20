@@ -1,4 +1,4 @@
-# Proyecto de Python con la libreria tkinter
+# Proyecto de Python con la librería tkinter
 ## Punto de Venta - Proyecto Grupo 1
 ## Integrantes
     - Esteban
@@ -9,84 +9,73 @@
 ## Descripción
     Este proyecto tiene como objetivo desarrollar un sistema de escritorio básico para la
     gestión de ventas de un kiosco, usando como lenguaje de programación Python e integrando una
-    interfaz gráfica con la libreria Tkinter. Este proyecto fue creado como trabajo práctico de
-    la Etapa 2 del Informatorio
+    interfaz gráfica con la librería Tkinter. Este proyecto fue creado como trabajo práctico de
+    la Etapa 2 del Informatorio.
+
+    El sistema unifica 4 "mini-proyectos" en una única aplicación lanzada desde un archivo `main.py` principal. Los mini-proyectos que tenemos como consigna son:
+    - Barra de desplazamiento
+    - Reloj
+    - Agregar/Eliminar
+    - Menu desplegable
+    
 
 ### Características Principales
-    Una lista de lo que hace el software. //Tdv incompleto
-    - Registro de ventas en tiempo real.
-
-    - Conexión a base de datos MySQL.
-
-    - Cálculo de total de la venta.
-
-    - Reloj integrado en la interfaz.
-
-    - Historial de ventas (Futuro).
-
-    - Gestión de inventario (Futuro).
+    - **Registro de Ventas:** Permite registrar productos (con nombre y precio manual) en una venta.
+    - **Conexión a BD en la Nube:** Se conecta a una base de datos **PostgreSQL** hosteada en Render.
+    - **Cálculo de Totales:** Calcula el subtotal por producto y el total de la venta.
+    - **Reloj Integrado:** Muestra un reloj en tiempo real en la pantalla principal.
+    - **Historial de Ventas:** Permite consultar un historial de las ventas guardadas en la BD.
+    - **Programación Asíncrona:** Utiliza **hilos (`threading`)** para las consultas a la BD, evitando que la interfaz gráfica se congele.
+    - **Panel "Acerca de":** Incluye información sobre el proyecto y las tecnologías usadas.
 
 ### Stack Tecnológico 
 
-    - Lenguaje: Python
+    - **Lenguaje:** Python 3
+    - **Interfaz Gráfica (GUI):** Tkinter
+    - **Base de Datos:** PostgreSQL (Hosteada en Render)
+    - **Conector Python-BD:** psycopg2-binary
+    - **Empaquetador:** PyInstaller
+    - **Variables de Entorno:** python-dotenv
 
-    - Interfaz Gráfica (GUI): Tkinter
+### Cómo Usar la Aplicación
 
-    - Base de Datos: MySQL
+#### Opción 1: Usar el Ejecutable (Recomendado para Usuarios)
 
-    - Conector Python-MySQL: mysql-connector-python
+Esta es la forma más fácil de usar la aplicación sin necesidad de instalar Python.
 
-### Estructura de la Base de Datos (Schema)
-El sistema utiliza una base de datos MySQL (`kiosco_db`) con tres tablas relacionales para asegurar la integridad de los datos.
+1.  **Descargar la Carpeta:** Obtén la carpeta compilada `App-Kiosco `
+2.  **Verificar Archivos:** Asegúrate de que la carpeta contenga **dos archivos** esenciales:
+    * `main.exe` o `main`
+    * `.env` (Este archivo es **OBLIGATORIO** y debe estar junto al ejecutable).
+3.  **Ejecutar:**
+    * Simplemente haz doble clic en `main.exe`.
 
-### Tabla: `Productos`
-Almacena el inventario físico del kiosco.
-* `id_producto` (INT, PK): Identificador único del producto.
-* `nombre` (VARCHAR): Nombre del producto.
-* `precio` (DECIMAL): Precio de venta unitario.
-* `stock` (INT): Cantidad disponible en inventario.
+#### Opción 2: Ejecutar desde el Código Fuente (para Desarrollo)
 
-### Tabla: `Ventas`
-Almacena un registro (ticket) por cada transacción completada.
-* `id_venta` (INT, PK): Identificador único de la venta.
-* `fecha_hora` (DATETIME): Marca de tiempo de cuándo se realizó la venta.
-* `total_venta` (DECIMAL): Suma total de la transacción.
+Esta opción es para desarrolladores que quieran modificar el código.
 
-### Tabla: `Detalle_Ventas`
-Actúa como tabla pivote, conectando `Ventas` y `Productos`. Almacena cada línea de item de una venta.
-* `id_detalle` (INT, PK): Identificador único del detalle.
-* `id_venta` (FK): Referencia a la tabla `Ventas`.
-* `id_producto` (FK): Referencia a la tabla `Productos`.
-* `cantidad` (INT): Cuántas unidades de este producto se vendieron.
-* `precio_en_venta` (DECIMAL): El precio del producto al momento de la venta (para guardar el historial de precios).
-
-### Requisitos e Instalación
-    Pasos básicos: //falta completar
 1.  **Clonar el Repositorio**
     ```bash
-    git clone (https://github.com/EstebanNunez99/proyecto-tkinter-grupo-1.git)
-    cd (proyecto-tkinter-grupo-1)
-    ```
-2.  **Crear y Activar un Entorno Virtual**
-    ```bash
-    python3 -m venv venv
-    
-    Comando para entrar al entorno virtual
-    source venv/bin/activate
-
-    Comando para salir del entorno virtual
-    deactivate
+    git clone https://github.com/EstebanNunez99/proyecto-tkinter-grupo-1.git
+    cd proyecto-tkinter-grupo-1
     ```
 
 3.  **Instalar Librerías**
-(Dentro del entorno virtual)
     ```bash
-    pip install mysql-connector-python python-dotenv
+    pip install psycopg2-binary python-dotenv
     ```
 
 4.  **Configurar Variables de Entorno**
-    Crea un archivo llamado `.env` en la raíz del proyecto. Copiar formato del archivo `.env.example` 
-    *Cambiar los valores por tus datos originales*
+    Crea un archivo `.env` en la raíz del proyecto.
 
-5.  **Ejecutar la aplicación**
+5.  **Crear las Tablas en la BD**
+    Conéctate a tu base de datos de Render (usando `psql 'TU_URL_EXTERNA'`) y ejecuta el script SQL para crear las tablas `Ventas` y `DetalleVenta`.
+
+6.  **Ejecutar la aplicación**
+    ```bash
     python3 main.py
+    ```
+
+### Estructura de la Base de Datos (Schema)
+* **Tabla: `Ventas`** (`id_venta`, `fecha`, `total`)
+* **Tabla: `DetalleVenta`** (`id_detalle`, `id_venta`, `nombre_producto`, `cantidad`, `precio_unitario`)

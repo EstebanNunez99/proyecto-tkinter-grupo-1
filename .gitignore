@@ -1,17 +1,14 @@
-#Entorno virtual para instalar mysql-connector
-venv
-.vscode
-
 #Variables de entorno
 .env
 
-
-
-#Archivos que despues tengo que subir al repo
-test_conection.py
-main.py
-
-.env.example
-
-# Caché de Python
+# Archivos y carpetas de Python
+venv/
+*.pyc
 __pycache__/
+.venv
+# Carpetas de PyInstaller (¡Las importantes!)
+build/
+dist/
+
+
+main.spec
